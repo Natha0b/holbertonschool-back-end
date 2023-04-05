@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-
-"""script that given employee ID, returns information"""
+"""Script that given employee ID, returns information"""
 
 
 import requests
 import sys
+
 
 """API endpoint URL"""
 BASE_URL = 'https://jsonplaceholder.typicode.com'
@@ -30,7 +30,7 @@ employee_name = response.json()['name']
 print(f'Employee {employee_name} is done with\
       tasks({num_completed_tasks}/{total_num_tasks}):')
 
-"""Print title of completed tasks"""
+""" Print title of completed tasks """
 for todo in todos:
     if todo['completed']:
         print(f'\t {todo["title"]}')
