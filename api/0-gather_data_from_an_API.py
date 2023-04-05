@@ -1,8 +1,9 @@
 #!/usr/bin/python3
+
 """
 script that given employee ID, returns information
-about his/her TODO list progress
 """
+
 import requests
 import sys
 
@@ -21,7 +22,8 @@ total_num_tasks = len(todos)
 response = requests.get(f'{BASE_URL}/users/{employee_id}')
 employee_name = response.json()['name']
 
-print(f'Employee {employee_name} is done with tasks({num_completed_tasks}/{total_num_tasks}):')
+print(f'Employee {employee_name} is done with\
+      tasks({num_completed_tasks}/{total_num_tasks}):')
 
 for todo in todos:
     if todo['completed']:

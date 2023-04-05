@@ -24,9 +24,11 @@ with open(csv_file_name, mode='w', newline='') as csv_file:
     # Create CSV writer
     writer = csv.writer(csv_file, delimiter=',')
 
-    writer.writerow(['USER_ID', 'USERNAME', 'TASK_COMPLETED_STATUS', 'TASK_TITLE'])
+    writer.writerow(['USER_ID', 'USERNAME',
+                     'TASK_COMPLETED_STATUS', 'TASK_TITLE'])
 
     for todo in todos:
-        writer.writerow([employee_id, employee_name, todo['completed'], todo['title']])
+        writer.writerow([employee_id, employee_name,
+                         todo['completed'], todo['title']])
 
     print(f'{csv_file_name} has been created successfully.')
