@@ -1,21 +1,32 @@
 #!/usr/bin/python3
-"""given employee ID, returns information about his/her
-"""
-if __name__ == "__main__":
-    from requests import get
-    from sys import argv
+'''Script that given employee ID, returns information'''
 
-    user = get(
-        'https://jsonplaceholder.typicode.com/users/{}'.format(argv[1]))
-    url = get(
-        'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1]))
-    user = user.json()
-    url = url.json()
-    done = len([n for n in url if n['completed']])
-    not_done = len([m for m in url])
-    print("Employee {} is done with tasks({}/{}):".format(user['name'],
-                                                          done,
-                                                          not_done))
-    for task in url:
-        if task['completed'] is True:
-            print("\t {}".format(task['title']))
+if __name__ == '__main__':
+    import requests
+    import sys
+
+    '''API endpoint URL'''
+    BASE_URL = 'https://jsonplaceholder.typicode.com'
+
+    '''Get employee ID from command line argument'''
+    employee_id = int(sys.argv[1])
+
+    response = requests.get(f'{BASE_URL}/todos?userId={employee_id}')
+
+    '''Extract JSON data from response'''
+    todos = response.json()
+
+    num_completed_tasks = sum(todo['completed'] for todo in todos)
+    total_num_tasks = len(todos)
+
+    response = requests.get(f'{BASE_URL}/users/{employee_id}')
+    employee_name = response.json()['name']
+
+    '''Print employee TODO list progress'''
+    print(f'Employee {employee_name} is done with\
+        tasks({num_completed_tasks}/{total_num_tasks}):')
+
+    '''Print title of completed tasks'''
+    for todo in todos:
+        if todo['completed']:
+            print(f'\t {todo["title"]}')
