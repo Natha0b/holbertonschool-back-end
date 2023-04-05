@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
-"""
-script that given employee ID, returns information
-"""
+"""script that given employee ID, returns information"""
+
 
 import requests
 import sys
+
+if __name__ == '__main__':
+    """documents"""
 
 # API endpoint URL
 BASE_URL = 'https://jsonplaceholder.typicode.com'
