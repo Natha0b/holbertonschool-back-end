@@ -1,31 +1,23 @@
 #!/usr/bin/python3
-"""given employee ID, returns information about his/her"""
+"""Prints tasks completed of a certain user"""
 
 import requests
-import sys
+from sys import argv
 
 
 if __name__ == "__main__":
+    emp_id = argv[1]
 
-    BASE_URL = 'https://jsonplaceholder.typicode.com'
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/", params={"id": emp_id}).json()
+    tasks = requests.get(url + "todos/", params={"userId": emp_id}).json()
 
-    employee_id = int(sys.argv[1])
+    name = user[0].get("name") if len(user) > 0 else None
+    tasks_d = [task.get('title') for task in tasks
+               if task.get('completed') is True]
+    tasks_t, tasks_c = len(tasks), len(tasks_d)
 
-    response = requests.get(f'{BASE_URL}/todos?userId={employee_id}')
-    todos = response.json()
-
-    num_completed_tasks = sum(todo['completed'] for todo in todos)
-    total_num_tasks = len(todos)
-
-    try:
-        response = requests.get(f'{BASE_URL}/users/{employee_id}')
-        employee_name = response.json()['name']
-    except requests.exceptions.RequestException:
-        employee_name = 'Unknown'
-
-    print(f'Employee {employee_name} is done with tasks(\
-          {num_completed_tasks}/{total_num_tasks}):')
-
-    for todo in todos:
-        if todo['completed']:
-            print(f'\t {todo["title"]}')
+    print("Employee {} is done with tasks({}/{}):".format(name,
+                                                          tasks_c,
+                                                          tasks_t))
+    [print("\t {}".format(task)) for task in tasks_d]
