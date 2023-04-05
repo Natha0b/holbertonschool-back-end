@@ -3,41 +3,43 @@
 Script to export data in the CSV format.
 """
 
-import requests
-import sys
-import csv
+if __name__ == "__main__":
 
-# API endpoint URL
-BASE_URL = 'https://jsonplaceholder.typicode.com'
+    import requests
+    import sys
+    import csv
 
-# Get employee ID from command line argument
-employee_id = int(sys.argv[1])
+    # API endpoint URL
+    BASE_URL = 'https://jsonplaceholder.typicode.com'
 
-# Send GET request to API endpoint for employee's todos
-response = requests.get(f'{BASE_URL}/todos?userId={employee_id}')
+    # Get employee ID from command line argument
+    employee_id = int(sys.argv[1])
 
-# Extract JSON data from response
-todos = response.json()
+    # Send GET request to API endpoint for employee's todos
+    response = requests.get(f'{BASE_URL}/todos?userId={employee_id}')
 
-# Get employee name from API endpoint
-response = requests.get(f'{BASE_URL}/users/{employee_id}')
-employee_name = response.json()['username']
+    # Extract JSON data from response
+    todos = response.json()
 
-# Define CSV file name
-csv_file_name = f'{employee_id}.csv'
+    # Get employee name from API endpoint
+    response = requests.get(f'{BASE_URL}/users/{employee_id}')
+    employee_name = response.json()['username']
 
-# Open CSV file for writing
-with open(csv_file_name, mode='w', newline='') as csv_file:
-    # Create CSV writer
-    writer = csv.writer(csv_file, delimiter=',')
+    # Define CSV file name
+    csv_file_name = f'{employee_id}.csv'
 
-    # Write CSV header row
-    writer.writerow(['USER_ID', 'USERNAME',
-                     'TASK_COMPLETED_STATUS', 'TASK_TITLE'])
+    # Open CSV file for writing
+    with open(csv_file_name, mode='w', newline='') as csv_file:
+        # Create CSV writer
+        writer = csv.writer(csv_file, delimiter=',')
 
-    # Write CSV data rows
-    for todo in todos:
-        writer.writerow([employee_id, employee_name,
-                         todo['completed'], todo['title']])
+        # Write CSV header row
+        writer.writerow(['USER_ID', 'USERNAME',
+                        'TASK_COMPLETED_STATUS', 'TASK_TITLE'])
 
-    print(f'{csv_file_name} has been created successfully.')
+        # Write CSV data rows
+        for todo in todos:
+            writer.writerow([employee_id, employee_name,
+                            todo['completed'], todo['title']])
+
+        print(f'{csv_file_name} has been created successfully.')
