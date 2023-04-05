@@ -2,22 +2,26 @@
 """given employee ID, returns information about his/her"""
 
 import requests
-from sys import argv
+import sys
 
 
 if __name__ == "__main__":
-    emp_id = argv[1]
+    if len(sys.argv) != 2:
+        print("Usage: python employee_todo.py EMPLOYEE_ID")
+        sys.exit(1)
 
-    url = "https://jsonplaceholder.typicode.com/"
-    user = requests.get(url + "users/", params={"id": emp_id}).json()
-    tasks = requests.get(url + "todos/", params={"userId": emp_id}).json()
+    employee_id = sys.argv[1]
 
-    name = user[0].get("name") if len(user) > 0 else None
-    tasks_d = [task.get('title') for task in tasks
-               if task.get('completed') is True]
-    tasks_t, tasks_c = len(tasks), len(tasks_d)
+    response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+    employee_data = response.json()
 
-    print("Employee {} is done with tasks({}/{}):".format(name,
-                                                          tasks_c,
-                                                          tasks_t))
-    [print("\t {}".format(task)) for task in tasks_d]
+    response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    todos_data = response.json()
+
+    num_completed_tasks = sum(1 for todo in todos_data if todo["completed"])
+    total_num_tasks = len(todos_data)
+
+    print(f"Employee {employee_data['name']} is done with tasks ({num_completed_tasks}/{total_num_tasks}):")
+    for todo in todos_data:
+        if todo["completed"]:
+            print(f"\t {todo['title']}")
