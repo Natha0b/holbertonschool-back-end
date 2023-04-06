@@ -1,23 +1,26 @@
 #!/usr/bin/python3
-"""Prints tasks completed of a certain user"""
+'''given employee ID, returns information about his/her.'''
 
-import requests
-from sys import argv
+if __name__ == '__main__':
+    import requests
+    from sys import argv
 
+    user = requests.get('https://jsonplaceholder.typicode.com/users/{}'.
+                        format(argv[1]))
+    tasks = requests.get('https://jsonplaceholder.typicode.com/users/{}/todos'.
+                         format(argv[1]))
+    done_list = []
+    done_tasks = 0
+    total_tasks = 0
 
-if __name__ == "__main__":
-    emp_id = argv[1]
+    employee_name = user.json()['name']
+    for task in tasks.json():
+        total_tasks += 1
+        if task['completed'] is True:
+            done_list.append(task['title'])
+            done_tasks += 1
 
-    url = "https://jsonplaceholder.typicode.com/"
-    user = requests.get(url + "users/", params={"id": emp_id}).json()
-    tasks = requests.get(url + "todos/", params={"userId": emp_id}).json()
-
-    name = user[0].get("name") if len(user) > 0 else None
-    tasks_d = [task.get('title') for task in tasks
-               if task.get('completed') is True]
-    tasks_t, tasks_c = len(tasks), len(tasks_d)
-
-    print("Employee {} is done with tasks({}/{}):".format(name,
-                                                          tasks_c,
-                                                          tasks_t))
-    [print("\t {}".format(task)) for task in tasks_d]
+    print("Employee {} is done with tasks({}/{}):".
+          format(employee_name, done_tasks, total_tasks))
+    for task in done_list:
+        print("\t {}".format(task))
