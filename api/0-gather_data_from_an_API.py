@@ -5,9 +5,9 @@ if __name__ == '__main__':
     import requests
     from sys import argv
 
-    user = requests.get('https://jsonplaceholder.typicode.com/users/{}'.
+    user = requests.get('https://jsonplaceholder.typicode.com//users/{}'.
                         format(argv[1]))
-    tasks = requests.get('https://jsonplaceholder.typicode.com/users/{}/todos'.
+    tasks = requests.get('https://jsonplaceholder.typicode.com//users/{}/todos'.
                          format(argv[1]))
     done_list = []
     done_tasks = 0
