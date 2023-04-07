@@ -1,41 +1,23 @@
 #!/usr/bin/python3
-'''given employee ID, returns information about his/her.'''
+"""Prints tasks completed of a certain user"""
+
+import requests
+from sys import argv
 
 
-if __name__ == '__main__':
-    import requests
-    import sys
+if __name__ == "__main__":
+    emp_id = argv[1]
 
-    if len(sys.argv) != 2:
-        print("Usage: python3 {} EMPLOYEE_ID".format(sys.argv[0]))
-        sys.exit(1)
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/", params={"id": emp_id}).json()
+    tasks = requests.get(url + "todos/", params={"userId": emp_id}).json()
 
-    EMPLOYEE_ID = sys.argv[1]
+    name = user[0].get("name") if len(user) > 0 else None
+    tasks_d = [task.get('title') for task in tasks
+               if task.get('completed') is True]
+    tasks_t, tasks_c = len(tasks), len(tasks_d)
 
-    # Make API request to get employee's TODO list
-    user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{EMPLOYEE_ID}")
-    tasks_response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={EMPLOYEE_ID}")
-
-    if user_response.status_code != 200 or tasks_response.status_code != 200:
-        print("Failed to get TODO list for employee", EMPLOYEE_ID)
-        sys.exit(1)
-
-    user = user_response.json()
-    tasks = tasks_response.json()
-
-    # Count completed tasks
-    completed_tasks = [task for task in tasks if task['completed']]
-    NUMBER_OF_DONE_TASKS = len(completed_tasks)
-
-    # Count total tasks
-    TOTAL_NUMBER_OF_TASKS = len(tasks)
-
-    # Get employee name
-    EMPLOYEE_NAME = user['name']
-
-    # Print progress report
-    print(f"Employee {EMPLOYEE_NAME} is done with tasks ({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):")
-
-    # Print completed tasks
-    for task in completed_tasks:
-        print(f"\t{task['title']}")
+    print("Employee {} is done with tasks({}/{}):".format(name,
+                                                          tasks_c,
+                                                          tasks_t))
+    [print("\t {}".format(task)) for task in tasks_d]
