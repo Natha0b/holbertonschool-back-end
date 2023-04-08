@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Exports as json the tasks of a certain user"""
+"""Script to export data in the JSON format."""
 
 import json
 import requests
