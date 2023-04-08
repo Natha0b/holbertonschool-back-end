@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Prints tasks completed of a certain user"""
+"""given employee ID, returns information about his/her"""
 
 import requests
 from sys import argv
